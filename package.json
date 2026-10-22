@@ -9,9 +9,16 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cloudinary": "^2.11.0",
+    "dotenv": "^18.0.8",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.11.2",
     "next": "16.4.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "slugify": "^1.6.9",
+    "xss": "^1.0.15"
   },
   "devDependencies": {
     "eslint": "^9",

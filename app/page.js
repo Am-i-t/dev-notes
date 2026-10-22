@@ -1,69 +1,61 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+
+import logo from '@/assets/logo.png';
+import Image from 'next/image';
+import classes from './page.module.css';
+import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.js</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className={classes.main}>
+      <section className={classes.hero}>
+        <div className={classes.logoWrapper}>
+          <Image
+            src={logo}
+            alt="DevNotes logo"
+            width={200}
+            height={200}
+            priority
+            className={classes.logo}
+          />
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <p className={classes.tagline}>
+          YOUR DEVELOPER SPACE
+        </p>
+
+        <h1 className={classes.heading}>
+          DevNotes <span>— Learn. Build. Share.</span>
+        </h1>
+
+        <h2 className={classes.subheading}>
+          Your developer journey, documented in one place.
+        </h2>
+
+        <p className={classes.description}>
+          DevNotes is a space for developers to document
+          what they learn, share technical knowledge, and
+          turn ideas into practical notes. Explore programming
+          concepts, discover new techniques, and share your
+          experiences with the developer community.
+        </p>
+
+        <p className={classes.description}>
+          Whether you're learning a new technology or
+          solving a tricky bug, keep your knowledge organized
+          and make every line of code count.
+        </p>
+
+        <p className={classes.motto}>
+          Learn something new. Build something great.
+          Share what you know.
+        </p>
+
+        <div className={classes.actions}>
+          <Link href="/notes" className={classes.primaryButton}>
+            Explore Notes <span>→</span>
+          </Link>
         </div>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }
