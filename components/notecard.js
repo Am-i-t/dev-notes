@@ -19,6 +19,7 @@ export default function NoteCard({
   createdAt,
   onDelete,
   isPending,
+  canManage,
 }) {
   function check(content) {
     let snap = "";
@@ -64,14 +65,16 @@ export default function NoteCard({
         </div>
         <div className="post-action">
           <Link href={`/notes/${slug}`}>View Details</Link>
-          <button
-            type="button"
-            className="delete-btn"
-            onClick={() => onDelete(slug)}
-            disabled={isPending}
-          >
-            Delete
-          </button>
+          {canManage && (
+            <button
+              type="button"
+              className="delete-btn"
+              onClick={() => onDelete(slug)}
+              disabled={isPending}
+            >
+              Delete
+            </button>
+          )}
         </div>
       </article>
     </>

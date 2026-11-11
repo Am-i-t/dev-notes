@@ -69,97 +69,117 @@ export async function createNoteAction(prevState, formData) {
     image: imageURL,
   };
 
-  await createNote(note);
+  const result = await createNote(note, user.userId);
+
+if (!result.success) {
+  return {
+    errors: [result.message],
+  };
+}
 
   revalidatePath("/", "layout");
   redirect("/notes");
 }
 
 export async function editNoteAction(slug, prevState, formData) {
-  let errors = [];
-  
+  const errors = [];
+
   const user = await getCurrentUser();
 
   if (!user) {
-    return { errors: ["Please login first."] };
+    return {
+      errors: ["Please login first."],
+    };
   }
 
-    const oldValue = await getNoteBySlug(slug);
-    const title = formData.get("title");
-    const image = formData.get("image");
-    const content = formData.get("content");
+  const oldValue = await getNoteBySlug(slug);
 
-
-    if (!title || title.trim().length === 0) {
-      errors.push("Title is required...");
-    }
-
-    if (!content || content.trim().length === 0) {
-      errors.push("Content is required...");
-    }
-
-     if (errors.length > 0) {
-        return { errors };
-      }
-
-    if (!image || image.size === 0) {
-     const oldimage = oldValue.image;
-       let note = {
-      title,
-      slug,
-      content,
-      image:oldimage,
+  if (!oldValue) {
+    return {
+      errors: ["Note not found."],
     };
+  }
 
-    await updateNote(slug, note);
-    } else {
-      let imageURL;
-
-      try {
-        imageURL = await uploadImage(image);
-      } catch (error) {
-        throw new Error(
-          "Image upload failed, note was not created.Please try again later",
-        );
-      }
-
-        let note = {
-      title,
-      slug,
-      content,
-      image: imageURL,
+  // Check ownership before uploading a new image
+  if (oldValue.owner !== user.userId) {
+    return {
+      errors: ["You are not authorized to edit this note."],
     };
+  }
 
-    await updateNote(slug, note);
+  const title = formData.get("title");
+  const image = formData.get("image");
+  const content = formData.get("content");
+
+  if (!title || title.trim().length === 0) {
+    errors.push("Title is required.");
+  }
+
+  if (!content || content.trim().length === 0) {
+    errors.push("Content is required.");
+  }
+
+  if (errors.length > 0) {
+    return { errors };
+  }
+
+  let imageURL = oldValue.image;
+
+  if (image && image.size > 0) {
+    try {
+      imageURL = await uploadImage(image);
+    } catch (error) {
+      console.error(error);
+
+      return {
+        errors: ["Image upload failed. Please try again."],
+      };
     }
+  }
 
+  const note = {
+    title,
+    content,
+    image: imageURL,
+  };
 
-    revalidatePath("/", "layout");
-    redirect("/notes");
-  
+  const result = await updateNote(
+    slug,
+    user.userId,
+    note
+  );
+
+  if (!result.success) {
+    return {
+      errors: [result.message],
+    };
+  }
+
+  revalidatePath("/", "layout");
+
+  redirect("/notes");
 }
 
 
-
 export async function deleteNoteAction(slug) {
-
   const user = await getCurrentUser();
 
   if (!user) {
     throw new Error("Please login first.");
   }
 
-  const result = await deleteNote(slug);
+  const result = await deleteNote(
+    slug,
+    user.userId
+  );
 
-  if (result?.success === false) {
+  if (!result.success) {
     throw new Error(result.message);
-  }
-
-  if (result?.deletedCount === 0) {
-    throw new Error("Note not found.");
   }
 
   revalidatePath("/notes");
 
-  return { success: true };
+  return {
+    success: true,
+  };
 }
